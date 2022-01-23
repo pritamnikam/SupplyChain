@@ -32,7 +32,7 @@ contract ERC20 is IERC20 {
         string memory _tokenName,
         uint8 _decimalUnits,
         string memory _tokenSymbol
-    ) {
+    ) public {
         balances[msg.sender] = _initialAmount;  // Give the creator all initial tokens
         totalSupply = _initialAmount;           // Update total supply
         name = _tokenName;                      // Set the name for display purposes

@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-
+/*
 interface ISupplyChain {
 
     function addParticipant(string memory _name,
                             string memory _pass,
                             address _pAdd,
                             string memory _pType)
-      external returns (uint32);
+      public returns (uint32);
     
     function getParticipant(uint32 _participant_id)
-      external view returns (string memory, address, string memory);
+      public view returns (string memory, address, string memory);
     
     function addProduct(uint32 _ownerId,
                         string memory _modelNumber,
                         string memory _partNumber,
                         string memory _serialNumber,
                         uint32 _productCost) 
-      external returns (uint32);
+      public returns (uint32);
 
     function getProduct(uint32 _productId)
-      external view returns (string memory,
+      public view returns (string memory,
                              string memory,
                              string memory,
                              uint32,
@@ -28,23 +28,24 @@ interface ISupplyChain {
                              uint32);
     
     function getProvenance(uint32 _prodId)
-      external view returns (uint32[] memory);
+      public view returns (uint32[] memory);
 
     function getOwnership(uint32 _regId)
-      external view returns (uint32, uint32, address, uint32);
+      public view returns (uint32, uint32, address, uint32);
 
     function authenticateParticipant(uint32 _uid,
                                      string memory _uname,
                                      string memory _pass,
                                      string memory _utype)
-      external view returns (bool);
+      public view returns (bool);
 
     event TransferOwnership(
       uint32 productId
     );
 }
+*/
 
-contract SupplyChain is ISupplyChain {
+contract SupplyChain /*is ISupplyChain */{
 
     uint32 public product_id = 0;     // Product ID
     uint32 public participant_id = 0; // Participant ID
@@ -82,6 +83,10 @@ contract SupplyChain is ISupplyChain {
          require(msg.sender == products[_productId].productOwner,"");
          _;
     }
+
+    event TransferOwnership(
+      uint32 productId
+    );
 
     function newOwner(uint32 _user1Id,
                       uint32 _user2Id, 
@@ -134,7 +139,7 @@ contract SupplyChain is ISupplyChain {
                             string memory _pass,
                             address _pAdd,
                             string memory _pType)
-      external returns (uint32) {
+      public returns (uint32) {
         uint32 userId = participant_id++;
         participants[userId].userName = _name;
         participants[userId].password = _pass;
@@ -144,7 +149,7 @@ contract SupplyChain is ISupplyChain {
     }
     
     function getParticipant(uint32 _participant_id)
-      external view returns (string memory, address, string memory) {
+      public view returns (string memory, address, string memory) {
         return (participants[_participant_id].userName,
                 participants[_participant_id].participantAddress,
                 participants[_participant_id].participantType);
@@ -155,7 +160,7 @@ contract SupplyChain is ISupplyChain {
                         string memory _partNumber,
                         string memory _serialNumber,
                         uint32 _productCost) 
-      external returns (uint32) {
+      public returns (uint32) {
         if (keccak256(abi.encodePacked(participants[_ownerId].participantType)) == keccak256("Manufacturer")) {
             uint32 productId = product_id++;
             products[productId].modelNumber = _modelNumber;
@@ -172,7 +177,7 @@ contract SupplyChain is ISupplyChain {
     }
 
     function getProduct(uint32 _productId)
-      external view returns (string memory,
+      public view returns (string memory,
                              string memory,
                              string memory,
                              uint32,
@@ -187,12 +192,12 @@ contract SupplyChain is ISupplyChain {
     }
     
     function getProvenance(uint32 _prodId)
-      external view returns (uint32[] memory) {
+      public view returns (uint32[] memory) {
         return productTrack[_prodId];
     }
 
     function getOwnership(uint32 _regId)
-      external view returns (uint32, uint32, address, uint32) {
+      public view returns (uint32, uint32, address, uint32) {
         Ownership memory r = ownerships[_regId];
         return (r.productId,r.ownerId,r.productOwner,r.trxTimeStamp);
     }
@@ -201,7 +206,7 @@ contract SupplyChain is ISupplyChain {
                                      string memory _uname,
                                      string memory _pass,
                                      string memory _utype)
-      external view returns (bool) {
+      public view returns (bool) {
         if(keccak256(abi.encodePacked(participants[_uid].participantType)) == keccak256(abi.encodePacked(_utype))) {
             if(keccak256(abi.encodePacked(participants[_uid].userName)) == keccak256(abi.encodePacked(_uname))) {
                 if(keccak256(abi.encodePacked(participants[_uid].password)) == keccak256(abi.encodePacked(_pass))) {
