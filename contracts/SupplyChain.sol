@@ -1,49 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-/*
-interface ISupplyChain {
-
-    function addParticipant(string memory _name,
-                            string memory _pass,
-                            address _pAdd,
-                            string memory _pType)
-      public returns (uint32);
-    
-    function getParticipant(uint32 _participant_id)
-      public view returns (string memory, address, string memory);
-    
-    function addProduct(uint32 _ownerId,
-                        string memory _modelNumber,
-                        string memory _partNumber,
-                        string memory _serialNumber,
-                        uint32 _productCost) 
-      public returns (uint32);
-
-    function getProduct(uint32 _productId)
-      public view returns (string memory,
-                             string memory,
-                             string memory,
-                             uint32,
-                             address,
-                             uint32);
-    
-    function getProvenance(uint32 _prodId)
-      public view returns (uint32[] memory);
-
-    function getOwnership(uint32 _regId)
-      public view returns (uint32, uint32, address, uint32);
-
-    function authenticateParticipant(uint32 _uid,
-                                     string memory _uname,
-                                     string memory _pass,
-                                     string memory _utype)
-      public view returns (bool);
-
-    event TransferOwnership(
-      uint32 productId
-    );
-}
-*/
 
 contract SupplyChain /*is ISupplyChain */{
 
@@ -97,7 +53,7 @@ contract SupplyChain /*is ISupplyChain */{
         uint32 ownership_id = owner_id++;
 
         if(keccak256(abi.encodePacked(p1.participantType)) == keccak256("Manufacturer")
-            && keccak256(abi.encodePacked(p2.participantType))==keccak256("Supplier")){
+            && keccak256(abi.encodePacked(p2.participantType))==keccak256("Supplier")) {
             ownerships[ownership_id].productId = _prodId;
             ownerships[ownership_id].productOwner = p2.participantAddress;
             ownerships[ownership_id].ownerId = _user2Id;
@@ -108,7 +64,8 @@ contract SupplyChain /*is ISupplyChain */{
 
             return (true);
         }
-        else if(keccak256(abi.encodePacked(p1.participantType)) == keccak256("Supplier") && keccak256(abi.encodePacked(p2.participantType))==keccak256("Supplier")){
+        else if(keccak256(abi.encodePacked(p1.participantType)) == keccak256("Supplier")
+            && keccak256(abi.encodePacked(p2.participantType)) == keccak256("Supplier")) {
             ownerships[ownership_id].productId = _prodId;
             ownerships[ownership_id].productOwner = p2.participantAddress;
             ownerships[ownership_id].ownerId = _user2Id;
@@ -119,7 +76,8 @@ contract SupplyChain /*is ISupplyChain */{
 
             return (true);
         }
-        else if(keccak256(abi.encodePacked(p1.participantType)) == keccak256("Supplier") && keccak256(abi.encodePacked(p2.participantType))==keccak256("Consumer")){
+        else if(keccak256(abi.encodePacked(p1.participantType)) == keccak256("Supplier")
+            && keccak256(abi.encodePacked(p2.participantType)) == keccak256("Consumer")) {
             ownerships[ownership_id].productId = _prodId;
             ownerships[ownership_id].productOwner = p2.participantAddress;
             ownerships[ownership_id].ownerId = _user2Id;
